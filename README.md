@@ -42,3 +42,11 @@ El sistema recibe consultas de clientes, analiza automáticamente el problema me
 - Diagrama de arquitectura
 - Evidencias del funcionamiento
 - Dashboard de control
+
+- ## Enlaces
+
+### Base de datos Airtable
+https://airtable.com/appTJFTOt5e9cS3t9/shrQsAwgmJfpXd9El
+
+### Repositorio GitHub
+https://github.com/EzequielCampo/TP-Final-CoderHouse-Automatización-IA
