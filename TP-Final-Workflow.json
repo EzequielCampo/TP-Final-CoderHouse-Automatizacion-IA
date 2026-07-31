@@ -1,0 +1,1820 @@
+{
+  "name": "Recepcion y analisis de consultas",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "consulta-servicio-tecnico",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bc9c7739-2a58-4ee5-a44a-b0ce8867cdca",
+      "name": "NUEVA CONSULTA",
+      "webhookId": "3e10521c-db65-4728-992b-459d9375841f"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d99569db-51f7-4297-8e6e-38160b7e4231",
+              "name": "=body.nombre",
+              "value": "={{$json.body.nombre}}",
+              "type": "string"
+            },
+            {
+              "id": "4955ad3f-bd28-482d-8f9f-99d6297f538c",
+              "name": "=body.email",
+              "value": "={{$json.body.email}}",
+              "type": "string"
+            },
+            {
+              "id": "3116745a-0591-4bbe-b2e2-ac56bb2bfa4b",
+              "name": "=body.telefono",
+              "value": "={{$json.body.telefono}}",
+              "type": "string"
+            },
+            {
+              "id": "06d36d34-ef77-4bcd-a662-62d78309b235",
+              "name": "=body.canal",
+              "value": "={{$json.body.canal}}",
+              "type": "string"
+            },
+            {
+              "id": "db2eb243-0032-4542-b3da-febed8fa4c10",
+              "name": "=body.mensaje",
+              "value": "={{$json.body.mensaje}}",
+              "type": "string"
+            },
+            {
+              "id": "469c8373-0e24-40ba-87d9-d497e3261416",
+              "name": "body.id_externo",
+              "value": "={{$json.body.id_externo}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "76def8d7-8173-4712-b679-9d48ed816430",
+      "name": "Normalizar datos"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "9fd5e013-866a-4180-8641-d3aa6faf1a30",
+              "leftValue": "={{ $json.body.nombre }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "efad2bae-4b13-4e06-87b5-a6f6c7e826f3",
+              "leftValue": "={{ $json.body.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "a69a56b9-9c6b-4765-a6d9-99e6eebcf6cf",
+              "leftValue": "={{ $json.body.telefono }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e656c86d-e730-4bef-ad98-adce39db8cea",
+              "leftValue": "={{ $json.body.canal }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e78e0eb2-ac07-4631-9b12-fd9f84176e76",
+              "leftValue": "={{ $json.body.mensaje }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "10032cff-3f2c-4f92-a8b8-54a1bbdcbcee",
+      "name": "Validar consulta"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appTJFTOt5e9cS3t9",
+          "mode": "list",
+          "cachedResultName": "Asistente IA - Servicio Técnico de Celulares",
+          "cachedResultUrl": "https://airtable.com/appTJFTOt5e9cS3t9"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblitUplbidywOoJ4",
+          "mode": "list",
+          "cachedResultName": "Casos Técnicos",
+          "cachedResultUrl": "https://airtable.com/appTJFTOt5e9cS3t9/tblitUplbidywOoJ4"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Aprobado por Humano": false,
+            "Estado": "Nuevo",
+            "Mensaje Original": "={{ $('Normalizar datos').item.json.body.mensaje }}",
+            "Nombre recibido": "={{ $('Normalizar datos').item.json.body.nombre }}",
+            "Email recibido": "={{ $('Normalizar datos').item.json.body.email }}",
+            "Telefono recibido": "={{ $('Normalizar datos').item.json.body.telefono }}",
+            "Cliente": "={{ $json.id }}",
+            "Canal de origen": "=Webhook de prueba"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID Caso",
+              "displayName": "ID Caso",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha de ingreso",
+              "displayName": "Fecha de ingreso",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Cliente",
+              "displayName": "Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Nuevo",
+                  "value": "Nuevo"
+                },
+                {
+                  "name": "Validando datos",
+                  "value": "Validando datos"
+                },
+                {
+                  "name": "Datos incompletos",
+                  "value": "Datos incompletos"
+                },
+                {
+                  "name": "Procesando con IA",
+                  "value": "Procesando con IA"
+                },
+                {
+                  "name": "En revisión",
+                  "value": "En revisión"
+                },
+                {
+                  "name": "Corrección solicitada",
+                  "value": "Corrección solicitada"
+                },
+                {
+                  "name": "Aprobado",
+                  "value": "Aprobado"
+                },
+                {
+                  "name": "Respuesta enviada",
+                  "value": "Respuesta enviada"
+                },
+                {
+                  "name": "Error",
+                  "value": "Error"
+                },
+                {
+                  "name": "Cerrado",
+                  "value": "Cerrado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aprobado por Humano",
+              "displayName": "Aprobado por Humano",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Mensaje Original",
+              "displayName": "Mensaje Original",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Canal de origen",
+              "displayName": "Canal de origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Instagram",
+                  "value": "Instagram"
+                },
+                {
+                  "name": "Facebook",
+                  "value": "Facebook"
+                },
+                {
+                  "name": "Whatsapp",
+                  "value": "Whatsapp"
+                },
+                {
+                  "name": "Otro",
+                  "value": "Otro"
+                },
+                {
+                  "name": "Webhook de prueba",
+                  "value": "Webhook de prueba"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Nombre recibido",
+              "displayName": "Nombre recibido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email recibido",
+              "displayName": "Email recibido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Telefono recibido",
+              "displayName": "Telefono recibido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ID externo del mensaje",
+              "displayName": "ID externo del mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1616,
+        -144
+      ],
+      "id": "aa6a59b4-bc93-42df-8aa0-92aa2caaf9b6",
+      "name": "Crear caso técnico",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "nl1L22m1tIgk3n5c",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appTJFTOt5e9cS3t9",
+          "mode": "list",
+          "cachedResultName": "Asistente IA - Servicio Técnico de Celulares",
+          "cachedResultUrl": "https://airtable.com/appTJFTOt5e9cS3t9"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblDgeyQYMXgjBh2p",
+          "mode": "list",
+          "cachedResultName": "Clientes",
+          "cachedResultUrl": "https://airtable.com/appTJFTOt5e9cS3t9/tblDgeyQYMXgjBh2p"
+        },
+        "filterByFormula": "={Email}='{{ $json.body.email }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        -64
+      ],
+      "id": "f8f2e1f2-3732-44dc-b5b3-1637c4a01d4c",
+      "name": "Buscar cliente por email",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "nl1L22m1tIgk3n5c",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ec2fb473-e484-47a0-871c-c6ec6dae2000",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        896,
+        -64
+      ],
+      "id": "6b9631a3-86cd-4063-bedb-cfda971d213d",
+      "name": "¿Cliente encontrado?"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appTJFTOt5e9cS3t9",
+          "mode": "list",
+          "cachedResultName": "Asistente IA - Servicio Técnico de Celulares",
+          "cachedResultUrl": "https://airtable.com/appTJFTOt5e9cS3t9"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblDgeyQYMXgjBh2p",
+          "mode": "list",
+          "cachedResultName": "Clientes",
+          "cachedResultUrl": "https://airtable.com/appTJFTOt5e9cS3t9/tblDgeyQYMXgjBh2p"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre Completo": "={{ $('Normalizar datos').item.json.body.nombre }}",
+            "Email": "={{ $('Normalizar datos').item.json.body.email }}",
+            "Teléfono": "={{ $('Normalizar datos').item.json.body.telefono }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre Completo",
+              "displayName": "Nombre Completo",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fecha Alta",
+              "displayName": "Fecha Alta",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        32
+      ],
+      "id": "d2dda5cd-12dc-4e33-861d-18770f235f2e",
+      "name": "Crear cliente",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "nl1L22m1tIgk3n5c",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1360,
+        -112
+      ],
+      "id": "4cc0831e-c716-49cd-8cd5-4af8d7ffa40a",
+      "name": "Unificar cliente"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.6-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.6-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un recepcionista técnico experto en reparación de teléfonos celulares.\n\nTu tarea es analizar la consulta del cliente y devolver EXCLUSIVAMENTE un JSON válido.\n\nInformación del caso:\n\nNombre del cliente:\n{{ $json.fields[\"Nombre recibido\"] }}\n\nCorreo:\n{{ $json.fields[\"Email recibido\"] }}\n\nTeléfono:\n{{ $json.fields[\"Telefono recibido\"] }}\n\nMensaje del cliente:\n{{ $json.fields[\"Mensaje Original\"] }}\n\nAnaliza el mensaje e identifica:\n\n- Marca del equipo.\n- Modelo del equipo.\n- Falla principal.\n- Categoría técnica.\n- Nivel de prioridad.\n- Nivel de complejidad.\n- Riesgo potencial.\n- Si requiere revisión humana.\n- Un breve resumen técnico.\n- Qué información adicional sería conveniente solicitar al cliente.\n\nLas categorías permitidas son:\n\nPantalla\nBatería\nCarga\nSoftware\nAgua\nPlaca\nAudio\nCámara\nConectividad\nBotones\nOtro\n\nLa prioridad puede ser:\n\nAlta\nMedia\nBaja\n\nLa complejidad puede ser:\n\nAlta\nMedia\nBaja\n\nEl riesgo puede ser:\n\nNinguno\nPérdida de datos\nDaño por líquido\nPosible falla de placa\nDesconocido\n\nDevuelve únicamente este JSON:\n\n{\n  \"marca\": \"\",\n  \"modelo\": \"\",\n  \"falla_principal\": \"\",\n  \"categoria\": \"\",\n  \"prioridad\": \"\",\n  \"complejidad\": \"\",\n  \"riesgo\": \"\",\n  \"requiere_revision_humana\": true,\n  \"resumen_tecnico\": \"\",\n  \"preguntas_para_el_cliente\": [],\n  \"datos_faltantes\": []\n}\n\nNo escribas explicaciones.\n\nNo utilices Markdown.\n\nDevuelve únicamente el JSON."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1840,
+        -128
+      ],
+      "id": "df024b78-de0d-40b2-90da-68b9ad0bc362",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "mBSu3BHk21F6epvT",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $json.content?.parts\n  ?.find(part => typeof part.text === 'string')\n  ?.text;\n\nif (!rawText) {\n  throw new Error('Gemini no devolvió contenido de texto para analizar.');\n}\n\nlet cleanedText = rawText.trim();\n\n// Protección por si el modelo alguna vez agrega bloques Markdown.\ncleanedText = cleanedText\n  .replace(/^```json\\s*/i, '')\n  .replace(/^```\\s*/i, '')\n  .replace(/\\s*```$/i, '');\n\nlet analysis;\n\ntry {\n  analysis = JSON.parse(cleanedText);\n} catch (error) {\n  throw new Error(\n    `La respuesta de Gemini no contiene un JSON válido: ${error.message}`\n  );\n}\n\nreturn [\n  {\n    json: {\n      airtable_record_id: $('Crear caso técnico').first().json.id,\n      id_caso:\n        $('Crear caso técnico').first().json.fields?.['ID Caso'] ?? '',\n      ...analysis,\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2208,
+        -128
+      ],
+      "id": "178ff806-284a-4ccb-b7cd-ae2e85721f91",
+      "name": "Parsear análisis IA"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appTJFTOt5e9cS3t9",
+          "mode": "list",
+          "cachedResultName": "Asistente IA - Servicio Técnico de Celulares",
+          "cachedResultUrl": "https://airtable.com/appTJFTOt5e9cS3t9"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblitUplbidywOoJ4",
+          "mode": "list",
+          "cachedResultName": "Casos Técnicos",
+          "cachedResultUrl": "https://airtable.com/appTJFTOt5e9cS3t9/tblitUplbidywOoJ4"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Aprobado por Humano": false,
+            "ID Caso": "={{$json.id_caso}}",
+            "Marca detectada": "={{$json.marca}}",
+            "Prioridad IA": "={{$json.prioridad}}",
+            "Resumen IA": "={{$json.resumen_tecnico}}",
+            "Modelo detectado": "={{$json.modelo}}",
+            "Falla principal": "={{$json.falla_principal}}",
+            "Categoría IA": "={{$json.categoria}}",
+            "Complejidad IA": "={{$json.complejidad}}",
+            "Riesgo IA": "={{$json.riesgo}}",
+            "Preguntas IA": "={{$json.preguntas_para_el_cliente.join('\\n')}}",
+            "Datos faltantes IA": "={{$json.datos_faltantes.join('\\n')}}",
+            "Requiere revisión humana": "={{$json.requiere_revision_humana}}"
+          },
+          "matchingColumns": [
+            "ID Caso"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "ID Caso",
+              "displayName": "ID Caso",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha de ingreso",
+              "displayName": "Fecha de ingreso",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Cliente",
+              "displayName": "Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Nuevo",
+                  "value": "Nuevo"
+                },
+                {
+                  "name": "Validando datos",
+                  "value": "Validando datos"
+                },
+                {
+                  "name": "Datos incompletos",
+                  "value": "Datos incompletos"
+                },
+                {
+                  "name": "Procesando con IA",
+                  "value": "Procesando con IA"
+                },
+                {
+                  "name": "En revisión",
+                  "value": "En revisión"
+                },
+                {
+                  "name": "Corrección solicitada",
+                  "value": "Corrección solicitada"
+                },
+                {
+                  "name": "Aprobado",
+                  "value": "Aprobado"
+                },
+                {
+                  "name": "Respuesta enviada",
+                  "value": "Respuesta enviada"
+                },
+                {
+                  "name": "Error",
+                  "value": "Error"
+                },
+                {
+                  "name": "Cerrado",
+                  "value": "Cerrado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aprobado por Humano",
+              "displayName": "Aprobado por Humano",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Mensaje Original",
+              "displayName": "Mensaje Original",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Canal de origen",
+              "displayName": "Canal de origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Instagram",
+                  "value": "Instagram"
+                },
+                {
+                  "name": "Facebook",
+                  "value": "Facebook"
+                },
+                {
+                  "name": "Whatsapp",
+                  "value": "Whatsapp"
+                },
+                {
+                  "name": "Otro",
+                  "value": "Otro"
+                },
+                {
+                  "name": "Webhook de prueba",
+                  "value": "Webhook de prueba"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Nombre recibido",
+              "displayName": "Nombre recibido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email recibido",
+              "displayName": "Email recibido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Telefono recibido",
+              "displayName": "Telefono recibido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ID externo del mensaje",
+              "displayName": "ID externo del mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Marca detectada",
+              "displayName": "Marca detectada",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Modelo detectado",
+              "displayName": "Modelo detectado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Falla principal",
+              "displayName": "Falla principal",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría IA",
+              "displayName": "Categoría IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pantalla",
+                  "value": "Pantalla"
+                },
+                {
+                  "name": "Batería",
+                  "value": "Batería"
+                },
+                {
+                  "name": "Carga",
+                  "value": "Carga"
+                },
+                {
+                  "name": "Software",
+                  "value": "Software"
+                },
+                {
+                  "name": "Agua",
+                  "value": "Agua"
+                },
+                {
+                  "name": "Placa",
+                  "value": "Placa"
+                },
+                {
+                  "name": "Audio",
+                  "value": "Audio"
+                },
+                {
+                  "name": "Cámara",
+                  "value": "Cámara"
+                },
+                {
+                  "name": "Conectividad",
+                  "value": "Conectividad"
+                },
+                {
+                  "name": "Botones",
+                  "value": "Botones"
+                },
+                {
+                  "name": "Otro",
+                  "value": "Otro"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Prioridad IA",
+              "displayName": "Prioridad IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Alta",
+                  "value": "Alta"
+                },
+                {
+                  "name": "Media",
+                  "value": "Media"
+                },
+                {
+                  "name": "Baja",
+                  "value": "Baja"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Complejidad IA",
+              "displayName": "Complejidad IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Alta",
+                  "value": "Alta"
+                },
+                {
+                  "name": "Media",
+                  "value": "Media"
+                },
+                {
+                  "name": "Baja",
+                  "value": "Baja"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Riesgo IA",
+              "displayName": "Riesgo IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Ninguno",
+                  "value": "Ninguno"
+                },
+                {
+                  "name": "Perdida de datos",
+                  "value": "Perdida de datos"
+                },
+                {
+                  "name": "Daño por líquido",
+                  "value": "Daño por líquido"
+                },
+                {
+                  "name": "Posible falla de placa",
+                  "value": "Posible falla de placa"
+                },
+                {
+                  "name": "Desconocido",
+                  "value": "Desconocido"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Requiere revisión humana",
+              "displayName": "Requiere revisión humana",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Resumen IA",
+              "displayName": "Resumen IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Preguntas IA",
+              "displayName": "Preguntas IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Datos faltantes IA",
+              "displayName": "Datos faltantes IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        2432,
+        -128
+      ],
+      "id": "aa86a929-01c9-4eb7-91be-3cb63a74c08a",
+      "name": "Actualizar caso con análisis IA",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "nl1L22m1tIgk3n5c",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "937ee5d5-ea79-4a2e-83f2-1c26904035b1",
+              "leftValue": "={{$json.fields[\"Prioridad IA\"]}}",
+              "rightValue": "Alta",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2656,
+        -128
+      ],
+      "id": "16ccd16f-dbfd-40c0-9950-a36304ee4a6f",
+      "name": "¿Caso prioritario?"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.6-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.6-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un asesor técnico experto en reparación de teléfonos celulares.\n\nDebes redactar un mensaje profesional, claro y cordial para enviar al cliente.\n\nInformación del caso:\n\nNombre:\n{{$json.fields[\"Nombre recibido\"]}}\n\nEquipo:\n{{$json.fields[\"Marca detectada\"]}} {{$json.fields[\"Modelo detectado\"]}}\n\nProblema:\n{{$json.fields[\"Falla principal\"]}}\n\nResumen técnico:\n{{$json.fields[\"Resumen IA\"]}}\n\nPreguntas pendientes:\n{{$json.fields[\"Preguntas IA\"]}}\n\nInstrucciones:\n\n- Saluda al cliente por su nombre.\n- Explica de forma sencilla lo que podría estar ocurriendo.\n- No afirmes diagnósticos definitivos.\n- Solicita la información faltante.\n- Recomienda no seguir utilizando el equipo si existe riesgo.\n- Mantén un tono profesional y amable.\n- No utilices Markdown.\n- Devuelve únicamente el texto del mensaje."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        2880,
+        -144
+      ],
+      "id": "ceef4a6d-d5d9-459c-a530-de5cf409ff7b",
+      "name": "Message a model1",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "mBSu3BHk21F6epvT",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $json.content?.parts?.[0]?.text;\n\nif (!rawText) {\n  throw new Error('Gemini no devolvió una respuesta para el cliente.');\n}\n\nconst cleanedText = rawText\n  .trim()\n  .replace(/^```json\\s*/i, '')\n  .replace(/^```\\s*/i, '')\n  .replace(/\\s*```$/i, '');\n\nlet parsed;\n\ntry {\n  parsed = JSON.parse(cleanedText);\n} catch (error) {\n  throw new Error(\n    `La respuesta sugerida no contiene un JSON válido: ${error.message}`\n  );\n}\n\nif (!parsed.mensaje) {\n  throw new Error('El JSON generado no contiene el campo \"mensaje\".');\n}\n\n// Tomamos el ID desde un nodo que siempre se ejecuta,\n// independientemente de que el IF salga por true o false.\nconst casoActualizado = $('Actualizar caso con análisis IA').first().json;\nconst idCaso = casoActualizado?.fields?.['ID Caso'];\n\nif (!idCaso) {\n  throw new Error('No se pudo recuperar el ID Caso desde Airtable.');\n}\n\nreturn [\n  {\n    json: {\n      id_caso: idCaso,\n      respuesta_sugerida: parsed.mensaje,\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3248,
+        -144
+      ],
+      "id": "3463fafc-7d12-4c49-9b62-1c03dd6c199e",
+      "name": "Parsear respuesta sugerida"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appTJFTOt5e9cS3t9",
+          "mode": "list",
+          "cachedResultName": "Asistente IA - Servicio Técnico de Celulares",
+          "cachedResultUrl": "https://airtable.com/appTJFTOt5e9cS3t9"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblitUplbidywOoJ4",
+          "mode": "list",
+          "cachedResultName": "Casos Técnicos",
+          "cachedResultUrl": "https://airtable.com/appTJFTOt5e9cS3t9/tblitUplbidywOoJ4"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Aprobado por Humano": false,
+            "Requiere revisión humana": false,
+            "ID Caso": "={{$json.id_caso}}",
+            "Respuesta sugerida IA": "={{$json.respuesta_sugerida}}"
+          },
+          "matchingColumns": [
+            "ID Caso"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "ID Caso",
+              "displayName": "ID Caso",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha de ingreso",
+              "displayName": "Fecha de ingreso",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Cliente",
+              "displayName": "Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Nuevo",
+                  "value": "Nuevo"
+                },
+                {
+                  "name": "Validando datos",
+                  "value": "Validando datos"
+                },
+                {
+                  "name": "Datos incompletos",
+                  "value": "Datos incompletos"
+                },
+                {
+                  "name": "Procesando con IA",
+                  "value": "Procesando con IA"
+                },
+                {
+                  "name": "En revisión",
+                  "value": "En revisión"
+                },
+                {
+                  "name": "Corrección solicitada",
+                  "value": "Corrección solicitada"
+                },
+                {
+                  "name": "Aprobado",
+                  "value": "Aprobado"
+                },
+                {
+                  "name": "Respuesta enviada",
+                  "value": "Respuesta enviada"
+                },
+                {
+                  "name": "Error",
+                  "value": "Error"
+                },
+                {
+                  "name": "Cerrado",
+                  "value": "Cerrado"
+                },
+                {
+                  "name": "Revisión prioritaria",
+                  "value": "Revisión prioritaria"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aprobado por Humano",
+              "displayName": "Aprobado por Humano",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Mensaje Original",
+              "displayName": "Mensaje Original",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Canal de origen",
+              "displayName": "Canal de origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Instagram",
+                  "value": "Instagram"
+                },
+                {
+                  "name": "Facebook",
+                  "value": "Facebook"
+                },
+                {
+                  "name": "Whatsapp",
+                  "value": "Whatsapp"
+                },
+                {
+                  "name": "Otro",
+                  "value": "Otro"
+                },
+                {
+                  "name": "Webhook de prueba",
+                  "value": "Webhook de prueba"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Nombre recibido",
+              "displayName": "Nombre recibido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email recibido",
+              "displayName": "Email recibido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Telefono recibido",
+              "displayName": "Telefono recibido",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ID externo del mensaje",
+              "displayName": "ID externo del mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Marca detectada",
+              "displayName": "Marca detectada",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Modelo detectado",
+              "displayName": "Modelo detectado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Falla principal",
+              "displayName": "Falla principal",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoría IA",
+              "displayName": "Categoría IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pantalla",
+                  "value": "Pantalla"
+                },
+                {
+                  "name": "Batería",
+                  "value": "Batería"
+                },
+                {
+                  "name": "Carga",
+                  "value": "Carga"
+                },
+                {
+                  "name": "Software",
+                  "value": "Software"
+                },
+                {
+                  "name": "Agua",
+                  "value": "Agua"
+                },
+                {
+                  "name": "Placa",
+                  "value": "Placa"
+                },
+                {
+                  "name": "Audio",
+                  "value": "Audio"
+                },
+                {
+                  "name": "Cámara",
+                  "value": "Cámara"
+                },
+                {
+                  "name": "Conectividad",
+                  "value": "Conectividad"
+                },
+                {
+                  "name": "Botones",
+                  "value": "Botones"
+                },
+                {
+                  "name": "Otro",
+                  "value": "Otro"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Prioridad IA",
+              "displayName": "Prioridad IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Alta",
+                  "value": "Alta"
+                },
+                {
+                  "name": "Media",
+                  "value": "Media"
+                },
+                {
+                  "name": "Baja",
+                  "value": "Baja"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Complejidad IA",
+              "displayName": "Complejidad IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Alta",
+                  "value": "Alta"
+                },
+                {
+                  "name": "Media",
+                  "value": "Media"
+                },
+                {
+                  "name": "Baja",
+                  "value": "Baja"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Riesgo IA",
+              "displayName": "Riesgo IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Ninguno",
+                  "value": "Ninguno"
+                },
+                {
+                  "name": "Perdida de datos",
+                  "value": "Perdida de datos"
+                },
+                {
+                  "name": "Daño por líquido",
+                  "value": "Daño por líquido"
+                },
+                {
+                  "name": "Posible falla de placa",
+                  "value": "Posible falla de placa"
+                },
+                {
+                  "name": "Desconocido",
+                  "value": "Desconocido"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Requiere revisión humana",
+              "displayName": "Requiere revisión humana",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Resumen IA",
+              "displayName": "Resumen IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Preguntas IA",
+              "displayName": "Preguntas IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Datos faltantes IA",
+              "displayName": "Datos faltantes IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Respuesta sugerida IA",
+              "displayName": "Respuesta sugerida IA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        3472,
+        -144
+      ],
+      "id": "336bc247-9789-4164-b673-87847200104a",
+      "name": "Update record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "nl1L22m1tIgk3n5c",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "NUEVA CONSULTA": {
+      "main": [
+        [
+          {
+            "node": "Normalizar datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar datos": {
+      "main": [
+        [
+          {
+            "node": "Validar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar consulta": {
+      "main": [
+        [
+          {
+            "node": "Buscar cliente por email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Buscar cliente por email": {
+      "main": [
+        [
+          {
+            "node": "¿Cliente encontrado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Cliente encontrado?": {
+      "main": [
+        [
+          {
+            "node": "Unificar cliente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear cliente": {
+      "main": [
+        [
+          {
+            "node": "Unificar cliente",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Crear caso técnico": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unificar cliente": {
+      "main": [
+        [
+          {
+            "node": "Crear caso técnico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Parsear análisis IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear análisis IA": {
+      "main": [
+        [
+          {
+            "node": "Actualizar caso con análisis IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar caso con análisis IA": {
+      "main": [
+        [
+          {
+            "node": "¿Caso prioritario?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Caso prioritario?": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Parsear respuesta sugerida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear respuesta sugerida": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ee2ec619-deee-4192-a88d-0bf417d81991",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "578f576b80d400a81839cfd7d94917afdb436f738ed6176570ad0dc930475bac"
+  },
+  "nodeGroups": [],
+  "id": "Z6Ps8Exrn7N6h3xH",
+  "tags": []
+}
